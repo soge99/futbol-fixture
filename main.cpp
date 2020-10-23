@@ -3,6 +3,9 @@
 #include <string>
 #include <cmath> 
 #include <cstdlib>
+#include <vector>
+#include <stdio.h>
+
 using namespace std;
 
 struct csv_info{
@@ -13,22 +16,37 @@ struct csv_info{
     double longitud;
 }info[18];
 
-// Haversine function
+class DistanciaEstadios{
+    private:
+    public:
+        int Estadio1;
+        int Estadio2;
+        double Distancia;
+        DistanciaEstadios(int, int, double);
+        void MostrarDistancia(csv_info*);
+};
+DistanciaEstadios::DistanciaEstadios(int _Estadio1, int _Estadio2, double _Distancia){
+    Estadio1 = _Estadio1;
+    Estadio2 = _Estadio2;
+    Distancia = _Distancia;
+}
+
+void DistanciaEstadios::MostrarDistancia(csv_info csv[]){
+        cout  << csv[this->Estadio1].equipo;
+        cout << " v/s " << csv[this->Estadio2].equipo; 
+        cout << ", Distancia: " << this->Distancia << endl;
+}
+
 double haversine(double lat1, double lon1, 
                         double lat2, double lon2) 
     { 
-        // distance between latitudes 
-        // and longitudes 
         double dLat = (lat2 - lat1) * 
                       M_PI / 180.0; 
         double dLon = (lon2 - lon1) *  
                       M_PI / 180.0; 
-  
-        // convert to radians 
         lat1 = (lat1) * M_PI / 180.0; 
         lat2 = (lat2) * M_PI / 180.0; 
   
-        // apply formulae 
         double a = pow(sin(dLat / 2), 2) +  
                    pow(sin(dLon / 2), 2) *  
                    cos(lat1) * cos(lat2); 
@@ -42,14 +60,12 @@ void get_csv(){
     ifstream file;
     string equipo,comuna, estadio,latitud,longitud;
     file.open("./data/equipos.csv");
-    
     while(file.good()){
         getline(file,equipo,';');
         getline(file,comuna,';');
         getline(file,estadio,';');
         getline(file,latitud,';');
         getline(file,longitud,'\n');
-        
         info[cont].equipo = equipo;
         info[cont].comuna = comuna;
         info[cont].estadio = estadio;
@@ -61,12 +77,30 @@ void get_csv(){
     }   
 }
 
-
+vector<DistanciaEstadios> generarDistanciasEstadios(csv_info csv[]){
+    vector<DistanciaEstadios> DistanciasEst;
+    for (int i = 1; i < 18 ; i++){
+            for(int j = i+1; j< 19; j++){
+                double Lat1, Lat2, Lon1, Lon2;
+                Lat1 = info[i].latitud;
+                Lon1 = info[i].longitud;
+                Lat2 = info[j].latitud;
+                Lon2 = info[j].longitud;
+                double Distancia =  haversine(Lat1, Lon1, Lat2, Lon2);
+                DistanciaEstadios Dist(i, j, Distancia);
+                DistanciasEst.push_back(Dist);
+            }
+        }
+        return DistanciasEst;
+}
 
 int main(int argv, char** argc){
 
     get_csv();
-
+    vector<DistanciaEstadios> distanciaEstadios = generarDistanciasEstadios(info);
+    for(unsigned int i = 0; i < distanciaEstadios.size(); i++){
+        distanciaEstadios.at(i).MostrarDistancia(info);
+    }
     //Para comprobar el struct tenga todos los datos nomas, la fila 0 son los encabezados, no se como sacarlos
     /*for(int i = 1; i<19;i++){
         cout<<i;
@@ -76,23 +110,7 @@ int main(int argv, char** argc){
         cout<<" - latitud: "<<info[i].latitud;
         cout<<" - longitud: "<<info[i].longitud;
         cout<<endl;
-    }*/
-
-    int k = 1;
-    for (int i = 1; i < 18 ; i++){
-        for(int j = i+1; j< 19; j++){
-            double Lat1, Lat2, Lon1, Lon2;
-            Lat1 = info[i].latitud;
-            Lon1 = info[i].longitud;
-            Lat2 = info[j].latitud;
-            Lon2 = info[j].longitud;
-            double Distancia =  haversine(Lat1, Lon1, Lat2, Lon2);
-            cout << k << " La distancia entre " << info[i].estadio << " y " << info[j].estadio << " es: " << Distancia << " KM" << endl;
-            k++;
-        }
-    }
-    
-   
+    }*/  
 
     return 0;
 }
