@@ -16,11 +16,14 @@ DistanciaEstadios.o: directorios src/DistanciaEstadios.cpp include/DistanciaEsta
 Funciones.o: directorios src/Funciones.cpp include/Funciones.h
 	$(CXX) $(CXXFLAGS) -c src/Funciones.cpp -o build/Funciones.o
 
+Equipo.o: directorios src/Equipo.cpp include/Equipo.h
+	$(CXX) $(CXXFLAGS) -c src/Equipo.cpp -o build/Equipo.o
+
 main.o: directorios main.cpp
 	$(CXX) $(CXXFLAGS) -c main.cpp -o build/main.o
 
-all: clean main.o DistanciaEstadios.o Funciones.o 
-	$(CXX) $(CXXFLAGS) -o dist/programa build/main.o build/DistanciaEstadios.o build/Funciones.o $(LIBS)
+all: clean main.o DistanciaEstadios.o Funciones.o Equipo.o 
+	$(CXX) $(CXXFLAGS) -o dist/programa build/main.o build/DistanciaEstadios.o build/Funciones.o build/Equipo.o $(LIBS)
 	rm -fr build
 
 .DEFAULT_GOAL := all

@@ -65,3 +65,36 @@ std::vector<DistanciaEstadios> generarDistanciasEstadios(std::vector<csv_info> &
     return DistanciasEst;
 }
  
+
+ void imprimirPartido(partido _partido, std::vector<Equipo> _equipos){
+    std::cout << "Local: " << _equipos.at(_partido.local).nombre;
+    std::cout << " - Visita: " << _equipos.at(_partido.visita).nombre;
+    std::cout << " | Estadio  " << _partido.estadio << std::endl;
+ }
+
+ double calcularDistancia(Estadio _est1, Estadio _est2){
+     double distancia, Lat1, Lat2, Lon1, Lon2;
+     Lat1 = _est1.latitud;
+     Lon1 = _est1.longitud;
+     Lat2 = _est2.latitud;
+     Lon2 = _est2.latitud;
+     distancia = haversine(Lat1, Lon1, Lat2, Lon2);
+     return distancia;
+ }
+
+ int menorDistancia(std::vector<Estadio> estadios_disponibles, int index){
+     unsigned int indice_estadio = (unsigned int)index;
+     unsigned int indice_menor;
+     double menor_distancia = 999999;
+     for(unsigned int i = 0; i < estadios_disponibles.size() ; i++){
+         if(i == indice_estadio){
+             continue;
+         }else{
+            double tmp_distancia = calcularDistancia(estadios_disponibles.at(index), estadios_disponibles.at(i));
+            if(tmp_distancia < menor_distancia){
+                indice_menor = i;
+            }
+         }
+     }
+     return indice_menor;
+ }

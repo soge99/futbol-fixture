@@ -11,6 +11,7 @@
 #include <cstdlib>
 
 #include "DistanciaEstadios.h"
+#include "Equipo.h"
 
 
 /**
@@ -34,5 +35,21 @@ void get_csv(std::vector<csv_info> &);
  */
 std::vector<DistanciaEstadios> generarDistanciasEstadios(std::vector<csv_info> &);
 
+
+/**
+ * Imprime un partido con el nombre de los equipos y el estadio.
+ */
+void imprimirPartido(partido , std::vector<Equipo>);
+
+/**
+ * Retorna la distancia entre dos estadios.
+ */
+double calcularDistancia(Estadio , Estadio);
+
+/**
+ * Retorna el índice del estadio más cercano al estadio en el índice 
+ * entregado como parámetro
+ */
+int menorDistancia(std::vector<Estadio> , int );
 
 #endif /* FUNCIONES_H */

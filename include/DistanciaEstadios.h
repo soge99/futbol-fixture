@@ -16,6 +16,21 @@ struct csv_info{
     double longitud;
 };
 
+struct partido{
+    int local;
+    int visita;
+    std::string estadio;
+};
+
+struct Estadio{
+    std::string nombre;
+    bool estado;
+    std::vector<partido> partidos_jugados;
+    double latitud;
+    double longitud;
+};
+
+
 /**
  * Clase de Distancias entre varios equipos.
  */
