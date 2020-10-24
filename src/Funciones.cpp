@@ -1,6 +1,11 @@
 #include "../include/Funciones.h"
 
-
+void participantes() {
+    std::cout << std::endl << "=== Taller 2 ===" << std::endl;
+    std::cout << std::endl << "Kevin Peralta"; 
+    std::cout << std::endl << "Roberto Albornoz"; 
+    std::cout << std::endl << "Sebastian Santelices" << std::endl; 
+}
 
 double haversine(double lat1, double lon1, 
                         double lat2, double lon2) 
@@ -56,7 +61,7 @@ std::vector<DistanciaEstadios> generarDistanciasEstadios(std::vector<csv_info> &
             DistanciaEstadios Dist(i, j, Distancia);
             DistanciasEst.push_back(Dist);
         }
-        }
-        return DistanciasEst;
+    }
+    return DistanciasEst;
 }
  

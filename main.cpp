@@ -18,7 +18,9 @@ int main(int argv, char** argc){
     vector<DistanciaEstadios> distanciaEstadios = generarDistanciasEstadios(info);
     for(unsigned int i = 0; i < distanciaEstadios.size(); i++){
         distanciaEstadios.at(i).MostrarDistancia(info);
+        // ES necesario volcar la información de distanciaEstadios en algo utilizable para el programa.
     }
+    
     //Para comprobar el struct tenga todos los datos nomas, la fila 0 son los encabezados, no se como sacarlos
     std::cout << " ======= DEBUG =======" << std::endl;
     for(int i = 1; i<19;i++){
