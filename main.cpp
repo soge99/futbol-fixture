@@ -156,7 +156,7 @@ int distanciaMinima(int enfrentamientos[17][18], int EstadiosActuales[18], int F
 
 void imprimirOrdenFechas(int ordenEnfrentamientos[17], int Enfrentamientos[17][18]){
 #pragma omp critical
-
+    {
     for (int i = 0; i <17 ; i++){
         
         for (int j=0 ; j < 9 ; j++){
@@ -164,6 +164,7 @@ void imprimirOrdenFechas(int ordenEnfrentamientos[17], int Enfrentamientos[17][1
         }
         cout << "Fecha " << i+1 ;
         cout << endl;
+    }
     }
     
 }
