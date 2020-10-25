@@ -18,6 +18,7 @@ int main(int argv, char** argc){
     get_csv(info);
     vector<DistanciaEstadios> distanciaEstadios = generarDistanciasEstadios(info);
     for(unsigned int i = 0; i < distanciaEstadios.size(); i++){
+        std::cout << i << " " << std::endl;
         distanciaEstadios.at(i).MostrarDistancia(info);
         // ES necesario volcar la información de distanciaEstadios en algo utilizable para el programa.
     }
@@ -39,7 +40,25 @@ int main(int argv, char** argc){
         estadio.longitud = longitud;
         estadios.push_back(estadio);
     }
-
+    // // Debugging cambios
+    //std::cout << "TRYING" << std::endl;
+    //std::vector<Equipo> pruebas;
+    //partido test = {};
+    //test.estadio = estadios.at(0).nombre;
+    //test.local = 1;
+    //test.visita = 2;
+    //Equipo test_equipo(equipos.at(0).nombre, test.estadio);
+    //test_equipo.guardarPartido(test, 0);
+    //pruebas.push_back(test_equipo);
+    //pruebas.push_back(test_equipo);
+    //for(unsigned int i = 0; i<pruebas.size(); i++){
+    //    std::cout << "Equipo: " << pruebas.at(i).nombre << std::endl;
+    //}
+    //if(partidosCompletados(pruebas, 0)){
+    //    std::cout << "Partidos completados" << std::endl;
+    //}
+////
+    
     //Para comprobar el struct tenga todos los datos nomas, la fila 0 son los encabezados, no se como sacarlos
     //std::cout << " ======= DEBUG =======" << std::endl;
     //for(int i = 1; i<19;i++){

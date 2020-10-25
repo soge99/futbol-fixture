@@ -17,12 +17,13 @@ class Equipo{
     public:
         std::string nombre;
         std::string estadio;
-        std::vector<partido> partidos_jugados;
+        std::vector<partido> partidos_jugados_fase1;
+        std::vector<partido> partidos_jugados_fase2;
         std::string posicion;
         bool local;
         Equipo(std::string, std::string);
-        bool revisarPartido(int);
-        void guardarPartido(partido);
+        bool revisarPartido(int, int);
+        void guardarPartido(partido, int);
 };
 
 

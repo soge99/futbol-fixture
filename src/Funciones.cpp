@@ -98,3 +98,36 @@ std::vector<DistanciaEstadios> generarDistanciasEstadios(std::vector<csv_info> &
      }
      return indice_menor;
  }
+
+
+bool partidosCompletados(std::vector<Equipo> equipos, int fase){
+    if(fase == 0){
+        for(unsigned int i = 0; i < equipos.size() ; i++){
+            if(equipos.at(i).partidos_jugados_fase1.size() == equipos.size()-1){
+                continue;
+            }else{
+                return false;
+            }
+        }
+        return true;
+    }else{
+        for(unsigned int i = 0; i < equipos.size() ; i++){
+            if(equipos.at(i).partidos_jugados_fase2.size() == equipos.size()-1){
+                continue;
+            }else{
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
+
+void fixture(std::vector<Equipo> equipos, std::vector<Estadio> estadios){
+    std::vector<partido> partidos_historico;
+    while(!partidosCompletados(equipos, 0)){
+        std::vector<int> estadios_disponibles = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17};
+        std::vector<int> equipos_disponibles = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17};
+        
+    }
+}

@@ -20,6 +20,7 @@ struct partido{
     int local;
     int visita;
     std::string estadio;
+    double distancia;
 };
 
 struct Estadio{
@@ -29,6 +30,7 @@ struct Estadio{
     double latitud;
     double longitud;
 };
+
 
 
 /**

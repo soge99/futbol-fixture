@@ -52,4 +52,16 @@ double calcularDistancia(Estadio , Estadio);
  */
 int menorDistancia(std::vector<Estadio> , int );
 
+/**
+ * Revisa si todos los equipos terminaron los partidos que
+ * le corresponden para la fase ingresada.
+ */
+bool partidosCompletados(std::vector<Equipo> , int );
+
+
+/**
+ * Algoritmo de ordenamiento que crea el Fixture enfocándose en la distancia mínima
+ */
+void fixture(std::vector<Equipo>, std::vector <Estadio>);
+
 #endif /* FUNCIONES_H */
