@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <vector>
 #include <stdio.h>
+#define MAX 99999999;
 
 using namespace std;
 
@@ -16,26 +17,56 @@ struct csv_info{
     double longitud;
 }info[18];
 
-class DistanciaEstadios{
-    private:
-    public:
-        int Estadio1;
-        int Estadio2;
-        double Distancia;
-        DistanciaEstadios(int, int, double);
-        void MostrarDistancia(csv_info*);
+struct Enfrentamientos{
+    int Local;
+    int Visita;
 };
-DistanciaEstadios::DistanciaEstadios(int _Estadio1, int _Estadio2, double _Distancia){
-    Estadio1 = _Estadio1;
-    Estadio2 = _Estadio2;
-    Distancia = _Distancia;
+struct Equipo{
+    int id;
+    int EstadioActual;
+};
+
+
+void imprimirEnfrentamientos(int A[17][18]){ // se borra
+    for(int i = 0; i < 17 ; i++){
+        for (int j=0; j<9 ; j++){
+            cout << A[i][2*j] << "-" << A[i][2*j+1] << " ";
+        }
+        cout << endl;
+    }
 }
 
-void DistanciaEstadios::MostrarDistancia(csv_info csv[]){
-        cout  << csv[this->Estadio1].equipo;
-        cout << " v/s " << csv[this->Estadio2].equipo; 
-        cout << ", Distancia: " << this->Distancia << endl;
+void GenerarEnfrentamientos(int enfrentamientos[17][18]){
+    int equipo1=1;
+    for (int i = 0; i < 17 ; i++){
+        for(int j = 0 ; j < 9 ; j++){
+            if(equipo1 == 18) equipo1 = 1;
+            if(j==0 && i%2!=0){
+                enfrentamientos[i][1] = equipo1;
+            }else{
+                enfrentamientos[i][2*j] = equipo1;
+            }
+            equipo1++; 
+        }
+    }
+    for(int i = 0; i<17 ; i++){
+        if(i%2 == 0){
+            enfrentamientos[i][1] = 18;
+        }else{
+            enfrentamientos[i][0] = 18;
+        }
+    }
+    int equipo2 = 17;
+    for (int i = 0; i < 17 ; i++){
+        for(int j = 1 ; j < 9 ; j++){
+            if(equipo2 == 0) equipo2 = 17;
+            enfrentamientos[i][2*j+1] = equipo2;
+            equipo2--;
+        }
+    }
 }
+
+
 
 double haversine(double lat1, double lon1, 
                         double lat2, double lon2) 
@@ -77,40 +108,75 @@ void get_csv(){
     }   
 }
 
-vector<DistanciaEstadios> generarDistanciasEstadios(csv_info csv[]){
-    vector<DistanciaEstadios> DistanciasEst;
-    for (int i = 1; i < 18 ; i++){
-            for(int j = i+1; j< 19; j++){
-                double Lat1, Lat2, Lon1, Lon2;
-                Lat1 = info[i].latitud;
-                Lon1 = info[i].longitud;
-                Lat2 = info[j].latitud;
-                Lon2 = info[j].longitud;
-                double Distancia =  haversine(Lat1, Lon1, Lat2, Lon2);
-                DistanciaEstadios Dist(i, j, Distancia);
-                DistanciasEst.push_back(Dist);
+double calcularDistanciaEstadios(int E1, int E2, csv_info csv[]){
+                double Lat1 = info[E1].latitud;
+                double Lon1 = info[E1].longitud;
+                double Lat2 = info[E2].latitud;
+                double Lon2 = info[E2].longitud; 
+                return haversine(Lat1, Lon1, Lat2, Lon2);
+}
+
+int distanciaMinima(int enfrentamientos[17][18], int EstadiosActuales[18], int FechaElegida[17]){
+    double Menor = MAX;
+    int PosMenor = 0;
+    for (int i = 0; i< 17 ; i++){
+        if(FechaElegida[i]!= 1){
+            double Suma = 0;
+            for (int j=0; j<9; j++){
+                Suma +=  calcularDistanciaEstadios(EstadiosActuales[enfrentamientos[i][2*j]-1] , EstadiosActuales[enfrentamientos[i][2*j+1] - 1], info);
+            }
+                if (Suma < Menor){
+                    Menor = Suma;
+                    PosMenor=i;
+                
             }
         }
-        return DistanciasEst;
+    }
+    return PosMenor;
+}
+
+void imprimirOrdenFechas(int ordenEnfrentamientos[17], int Enfrentamientos[17][18]){
+    for (int i = 0; i <17 ; i++){
+        
+        for (int j=0 ; j < 9 ; j++){
+            cout<< Enfrentamientos[ordenEnfrentamientos[i]][2*j] << "-" << Enfrentamientos[ordenEnfrentamientos[i]][2*j+1] << " ";
+        }
+        cout << "Fecha " << i+1 ;
+        cout << endl;
+    }
 }
 
 int main(int argv, char** argc){
-
-    get_csv();
-    vector<DistanciaEstadios> distanciaEstadios = generarDistanciasEstadios(info);
-    for(unsigned int i = 0; i < distanciaEstadios.size(); i++){
-        distanciaEstadios.at(i).MostrarDistancia(info);
+    int Enfrentamientos[17][18];
+    int ordenEnfrentamientos[17];
+    int FechaElegida[17];
+    int EstadioActual[18];
+    int posMenor;
+    for(int i = 0 ; i < 18 ; i++){
+        EstadioActual[i] = i+1;
     }
-    //Para comprobar el struct tenga todos los datos nomas, la fila 0 son los encabezados, no se como sacarlos
-    /*for(int i = 1; i<19;i++){
-        cout<<i;
-        cout<<"- equipo: "<<info[i].equipo;
-        cout<<" - comuna: "<<info[i].comuna;
-        cout<<" - estadio: "<<info[i].estadio;
-        cout<<" - latitud: "<<info[i].latitud;
-        cout<<" - longitud: "<<info[i].longitud;
-        cout<<endl;
-    }*/  
+    GenerarEnfrentamientos(Enfrentamientos);
+    imprimirEnfrentamientos(Enfrentamientos);
+    cout << "------------------\n"; 
+    get_csv();
 
+    cout<< "estadio actual: ";
+        for (int j = 0; j < 18 ; j ++){
+                cout << EstadioActual[j] << " ";
+        }cout << endl;
+    for(int i = 0; i<17 ; i ++){
+            posMenor = distanciaMinima(Enfrentamientos, EstadioActual, FechaElegida);
+            FechaElegida[posMenor] = 1;
+            ordenEnfrentamientos[i] = posMenor;
+            for(int j = 0 ; j < 9 ; j ++){
+                EstadioActual [Enfrentamientos[posMenor][2*j+1] -1 ] = EstadioActual [Enfrentamientos[posMenor][2*j] -1 ];
+            }
+        
+        cout<< "estadio actual: ";
+        for (int j = 0; j < 18 ; j ++){
+                cout << EstadioActual[j] << " ";
+        }cout << endl;
+    }
+    imprimirOrdenFechas( ordenEnfrentamientos, Enfrentamientos );
     return 0;
 }
