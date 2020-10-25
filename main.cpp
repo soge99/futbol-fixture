@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <vector>
 #include <stdio.h>
+#include <omp.h>
 #define MAX 99999999;
 
 using namespace std;
@@ -36,8 +37,12 @@ void imprimirEnfrentamientos(int A[17][18]){ // se borra
     }
 }
 
+
 void GenerarEnfrentamientos(int enfrentamientos[17][18]){
     int equipo1=1;
+#pragma omp parallel
+{
+#pragma omp for 
     for (int i = 0; i < 17 ; i++){
         for(int j = 0 ; j < 9 ; j++){
             if(equipo1 == 18) equipo1 = 1;
@@ -56,7 +61,9 @@ void GenerarEnfrentamientos(int enfrentamientos[17][18]){
             enfrentamientos[i][0] = 18;
         }
     }
+    
     int equipo2 = 17;
+    
     for (int i = 0; i < 17 ; i++){
         for(int j = 1 ; j < 9 ; j++){
             if(equipo2 == 0) equipo2 = 17;
@@ -64,6 +71,7 @@ void GenerarEnfrentamientos(int enfrentamientos[17][18]){
             equipo2--;
         }
     }
+}
 }
 
 
@@ -90,7 +98,11 @@ void get_csv(){
     int cont = 0;
     ifstream file;
     string equipo,comuna, estadio,latitud,longitud;
+#pragma omp critical
+    {    
     file.open("./data/equipos.csv");
+    
+       
     while(file.good()){
         getline(file,equipo,';');
         getline(file,comuna,';');
@@ -106,6 +118,7 @@ void get_csv(){
         info[cont].longitud = atof(_longitud.c_str());
         cont++;   
     }   
+    }
 }
 
 double calcularDistanciaEstadios(int E1, int E2, csv_info csv[]){
@@ -119,6 +132,11 @@ double calcularDistanciaEstadios(int E1, int E2, csv_info csv[]){
 int distanciaMinima(int enfrentamientos[17][18], int EstadiosActuales[18], int FechaElegida[17]){
     double Menor = MAX;
     int PosMenor = 0;
+#pragma omp parallel
+    {
+
+   
+    #pragma omp for
     for (int i = 0; i< 17 ; i++){
         if(FechaElegida[i]!= 1){
             double Suma = 0;
@@ -132,10 +150,13 @@ int distanciaMinima(int enfrentamientos[17][18], int EstadiosActuales[18], int F
             }
         }
     }
+    }
     return PosMenor;
 }
 
 void imprimirOrdenFechas(int ordenEnfrentamientos[17], int Enfrentamientos[17][18]){
+#pragma omp critical
+
     for (int i = 0; i <17 ; i++){
         
         for (int j=0 ; j < 9 ; j++){
@@ -144,6 +165,7 @@ void imprimirOrdenFechas(int ordenEnfrentamientos[17], int Enfrentamientos[17][1
         cout << "Fecha " << i+1 ;
         cout << endl;
     }
+    
 }
 
 int main(int argv, char** argc){
@@ -152,9 +174,12 @@ int main(int argv, char** argc){
     int FechaElegida[17];
     int EstadioActual[18];
     int posMenor;
+
     for(int i = 0 ; i < 18 ; i++){
         EstadioActual[i] = i+1;
     }
+    
+
     GenerarEnfrentamientos(Enfrentamientos);
     imprimirEnfrentamientos(Enfrentamientos);
     cout << "------------------\n"; 
@@ -178,5 +203,7 @@ int main(int argv, char** argc){
         }cout << endl;
     }
     imprimirOrdenFechas( ordenEnfrentamientos, Enfrentamientos );
+
+
     return 0;
 }
